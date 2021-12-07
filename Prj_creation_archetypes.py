@@ -1,12 +1,15 @@
 from teaser.project import Project
 import teaser.logic.utilities as utilities
+from teaser.logic.buildingobjects.buildingsystems.buildingahu import BuildingAHU
 import yaml
 import os
 import pickle
 
 
-class PrjScenario:
+class PrjScenario(Project):
+
     def __init__(self, config, prj_name):
+        #super().__init__(project)
         self.config = config
         self.name = prj_name
         self.prj = Project() #TODO CHECK IF POSSIBLE TO USE SUPER INIT
@@ -33,15 +36,19 @@ class PrjScenario:
             print('using method example buildings: 5 buildings')
             for i in range(5):  # ne genero 5
                 self.prj.add_residential(
-                    method='tabula_de', # could be tabula_dk
+                    method='tabula_dk', # could be tabula_dk
                     usage='apartment_block',
                     name="ResidentialApartmentBlock_%s" % i,
                     year_of_construction=1970,
                     number_of_floors=5,
                     height_of_floors=3.2,
                     net_leased_area=280,
-                    construction_type='tabula_standard'
+                    with_ahu=True,
+                    construction_type='tabula_standard',
                 )
+                print(self.prj)
+
+                self.prj.buildings[i].central_ahu = BuildingAHU(self.prj.buildings[i])
 
     def create_non_residentials(self, info= None):
         #todo create non residential for variety
@@ -49,9 +56,14 @@ class PrjScenario:
     def create_from_shp(self, shp_file):
         #TODO create a scenario from shapefile
         pass
-    def export_modelica_all(self, weather=None, n_el=2, model='AixLib',library= 'AixLib'):
+    def create_systems(self):
+        #dummy test
+        pass
+
+    def export_modelica_all(self, weather=None, n_el=2, model='IBPSA',library= 'AixLib'):
         '''library for IBPSA export has to be 'AixLib',
-            'Buildings', 'BuildingSystems' or 'IDEAS' '''
+            'Buildings', 'BuildingSystems' or 'IDEAS'
+            the export with export_ailib works only on dymola!!!'''
         #TODO GENERALISE THE FOLDER WHERE TO EXPORT the modelica models create self variables
         if model == 'AixLib':
             self.prj.used_library_calc = 'AixLib'
@@ -76,7 +88,7 @@ class PrjScenario:
 
 
         elif model == 'IBPSA':
-            self.prj.used_library_calc = 'IBPSA'
+            self.prj.used_library_calc = 'AixLib'
             self.prj.number_of_elements_calc = n_el
             self.prj.merge_windows_calc = False
             if weather == None:
@@ -118,7 +130,7 @@ class PrjScenario:
                 window_type = info['window_type'],
                 material = info['material'])
 
-    def save_project(self,mode='json'):
+    def save_project(self, mode='json'):
         prj_path = os.path.join(self.config['folder_path'], self.name)
 
         if mode == 'json':

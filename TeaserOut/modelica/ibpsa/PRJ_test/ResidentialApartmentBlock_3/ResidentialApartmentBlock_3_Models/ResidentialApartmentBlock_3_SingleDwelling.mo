@@ -3,30 +3,30 @@ within PRJ_test.ResidentialApartmentBlock_3.ResidentialApartmentBlock_3_Models;
 model ResidentialApartmentBlock_3_SingleDwelling
   "This is the simulation model of SingleDwelling within building ResidentialApartmentBlock_3 with traceable ID None"
 
-  Buildings.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
-    calTSky=Buildings.BoundaryConditions.Types.SkyTemperatureCalculation.HorizontalRadiation,
+  AixLib.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
+    calTSky=AixLib.BoundaryConditions.Types.SkyTemperatureCalculation.HorizontalRadiation,
     computeWetBulbTemperature=false,
     filNam=Modelica.Utilities.Files.loadResource(
         "modelica://PRJ_test/DEU_BW_Mannheim_107290_TRY2010_12_Jahr_BBSR.mos"))
     "Weather data reader"
     annotation (Placement(transformation(extent={{-98,52},{-78,72}})));
-  Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](    each outSkyCon=true,
+  AixLib.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](    each outSkyCon=true,
     each outGroCon=true,
     til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
     each lat = 0.88645272708792,
     azi = {3.141592653589793, 0.0, 1.5707963267948966, -1.5707963267948966, 0.0, 0.0})
     "Calculates diffuse solar radiation on titled surface for all directions"
     annotation (Placement(transformation(extent={{-68,20},{-48,40}})));
-  Buildings.BoundaryConditions.SolarIrradiation.DirectTiltedSurface HDirTil[6](    til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
+  AixLib.BoundaryConditions.SolarIrradiation.DirectTiltedSurface HDirTil[6](    til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
     each lat =  0.88645272708792,
     azi={3.141592653589793, 0.0, 1.5707963267948966, -1.5707963267948966, 0.0, 0.0})
     "Calculates direct solar radiation on titled surface for all directions"
     annotation (Placement(transformation(extent={{-68,52},{-48,72}})));
-  Buildings.ThermalZones.ReducedOrder.SolarGain.CorrectionGDoublePane corGDoublePane(n=6,  UWin=3.001169286735091)
+  AixLib.ThermalZones.ReducedOrder.SolarGain.CorrectionGDoublePane corGDoublePane(n=6,  UWin=3.001169286735091)
     "Correction factor for solar transmission"
     annotation (Placement(transformation(extent={{6,54},{26,74}})));
-  Buildings.ThermalZones.ReducedOrder.RC.TwoElements
-  thermalZoneTwoElements(
+  AixLib.ThermalZones.ReducedOrder.RC.OneElement
+  thermalZoneOneElement(
     redeclare package Medium = Modelica.Media.Air.DryAirNasa,
     VAir=896.0,
     hConExt=2.3635550772032947,
@@ -34,26 +34,20 @@ model ResidentialApartmentBlock_3_SingleDwelling
     gWin=0.75,
     ratioWinConRad=0.02,
     nExt=1,
-    RExt={0.00015084029268367497},
+    RExt={0.00015084029268367494},
     CExt={81900977.50896597},
-    hRad=5.0,
-    AInt=1194.6666666666667,
-    hConInt=2.3250000000000006,
-    nInt=1,
-    RInt={5.6107155817611015e-05},
-    CInt={275756919.7710094},
+    hRad=4.999999999999999,
     RWin=0.0035556097362753453,
     RExtRem=0.002919251468311393,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     extWallRC(thermCapExt(each der_T(fixed=true))),
-    intWallRC(thermCapInt(each der_T(fixed=true))),
     nOrientations=6,
     AWin={11.484200000000001, 11.484200000000001, 11.484200000000001, 11.484200000000001, 0.0, 0.0},
     ATransparent={11.484200000000001, 11.484200000000001, 11.484200000000001, 11.484200000000001, 0.0, 0.0},
     AExt={44.8826, 44.8826, 44.8826, 44.8826, 45.514, 45.514})
     "Thermal zone"
     annotation (Placement(transformation(extent={{44,-2},{92,34}})));
-  Buildings.ThermalZones.ReducedOrder.EquivalentAirTemperature.VDI6007WithWindow eqAirTemp(
+  AixLib.ThermalZones.ReducedOrder.EquivalentAirTemperature.VDI6007WithWindow eqAirTemp(
     n=6,
     wfGro=0.14851895293826808,
     wfWall={0.1887095555662707, 0.1887095555662707, 0.1887095555662707, 0.1887095555662707, 0.0966428247966491, 0.0},
@@ -83,7 +77,7 @@ model ResidentialApartmentBlock_3_SingleDwelling
   Modelica.Blocks.Sources.Constant const[6](each k=0)
     "Sets sunblind signal to zero (open)"
     annotation (Placement(transformation(extent={{-20,14},{-14,20}})));
-  Buildings.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
+  AixLib.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(
     transformation(extent={{-100,-10},{-66,22}}),iconTransformation(
     extent={{-70,-12},{-50,8}})));
@@ -233,16 +227,16 @@ equation
     points={{-78,62},{-73,62},{-68,62}},
     color={255,204,51},
     thickness=0.5));
-  connect(personsRad.port, thermalZoneTwoElements.intGainsRad)
+  connect(personsRad.port, thermalZoneOneElement.intGainsRad)
     annotation (Line(
     points={{68,-32},{84,-32},{100,-32},{100,24},{92.2,24}},
     color={191,0,0}));
-  connect(thermalConductorWin.solid, thermalZoneTwoElements.window)
+  connect(thermalConductorWin.solid, thermalZoneOneElement.window)
     annotation (
      Line(points={{38,21},{40,21},{40,20},{43.8,20}}, color={191,0,0}));
   connect(prescribedTemperature1.port, thermalConductorWin.fluid)
     annotation (Line(points={{20,20},{28,20},{28,21}}, color={191,0,0}));
-  connect(thermalZoneTwoElements.extWall, thermalConductorWall.solid)
+  connect(thermalZoneOneElement.extWall, thermalConductorWall.solid)
     annotation (Line(points={{43.8,12},{40,12},{40,1},{36,1}},
     color={191,0,0}));
   connect(thermalConductorWall.fluid, prescribedTemperature.port)
@@ -259,14 +253,14 @@ equation
     string="%first",
     index=-1,
     extent={{-6,3},{-6,3}}));
-  connect(machinesConv.port, thermalZoneTwoElements.intGainsConv)
+  connect(machinesConv.port, thermalZoneOneElement.intGainsConv)
     annotation (
     Line(points={{68,-74},{82,-74},{96,-74},{96,20},{92,20}}, color={191,
     0,0}));
-  connect(personsConv.port, thermalZoneTwoElements.intGainsConv)
+  connect(personsConv.port, thermalZoneOneElement.intGainsConv)
     annotation (
     Line(points={{68,-52},{96,-52},{96,20},{92,20}}, color={191,0,0}));
-  connect(corGDoublePane.solarRadWinTrans, thermalZoneTwoElements.solRad)
+  connect(corGDoublePane.solarRadWinTrans, thermalZoneOneElement.solRad)
     annotation (Line(points={{27,64},{34,64},{40,64},{40,31},{43,31}}, color={0,
     0,127}));
   annotation (experiment(
