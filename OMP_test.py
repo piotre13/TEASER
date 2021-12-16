@@ -8,3 +8,6 @@ mod= ModelicaSystem('/home/pietrorm/Documenti/CODE/TEASER/TeaserOut/modelica/aix
 
 print(mod.getInputs())
 print(omc)
+
+''' TODO here i should take only one model of a building and export it as a FMU
+in addition test a stepped simulation with the exchange of inputs and outputs'''
