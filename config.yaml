@@ -1,7 +1,7 @@
 ---
 #paths
 #TODO parametrise code by using this yaml file
-folder_path: "/home/pietrorm/Documenti/CODE/TEASER/TeaserOut/TEA_scenarios"
-folder_modelica_path: "/home/pietrorm/Documenti/CODE/TEASER/TeaserOut/modelica"
+folder_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
+folder_modelica_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
 weather_path: ""
 modelica_info: ""

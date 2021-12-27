@@ -14,7 +14,7 @@ if __name__ == '__main__':
     config = read_config('config.yaml')
 
     #Creating a scenario and saving****************
-    Scenario = Prj(config,'PRJ_test')
+    Scenario = Prj(config,'PRJ_test2')
     Scenario.create_residentials() # specify an info file with infos and number of buildings to be created or leave it as it is
 
     Scenario.save_project(mode='pickle') #no mode will save in json teaser format

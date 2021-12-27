@@ -1,0 +1,6 @@
+mingw32-make: Entering directory 'D:/Projects/PycharmProjects/casestudy/uesa/tests/omc_backend'
+rm -f RC_building.fmutmp/sources/RC_building_init.xml
+cp -a "C:/Program Files/OpenModelica1.18.0-64bit/share/omc/runtime/c/fmi/buildproject/"* RC_building.fmutmp/sources
+cp -a RC_building_FMU.libs RC_building.fmutmp/sources/
+mingw32-make: Leaving directory 'D:/Projects/PycharmProjects/casestudy/uesa/tests/omc_backend'
+RESULT: 0 

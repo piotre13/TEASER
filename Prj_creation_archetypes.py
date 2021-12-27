@@ -5,6 +5,7 @@ import yaml
 import os
 import pickle
 
+'''this is old script using a class maybe i'll only use functions it's cleaner'''
 
 class PrjScenario(Project):
 
@@ -36,19 +37,19 @@ class PrjScenario(Project):
             print('using method example buildings: 5 buildings')
             for i in range(5):  # ne genero 5
                 self.prj.add_residential(
-                    method='tabula_dk', # could be tabula_dk
+                    method='tabula_de', # could be tabula_dk
                     usage='apartment_block',
                     name="ResidentialApartmentBlock_%s" % i,
                     year_of_construction=1970,
                     number_of_floors=5,
                     height_of_floors=3.2,
                     net_leased_area=280,
-                    with_ahu=True,
                     construction_type='tabula_standard',
                 )
                 print(self.prj)
 
-                self.prj.buildings[i].central_ahu = BuildingAHU(self.prj.buildings[i])
+                #this line does not make the parameter ok for calculation
+                #self.prj.buildings[i].central_ahu = BuildingAHU(self.prj.buildings[i])
 
     def create_non_residentials(self, info= None):
         #todo create non residential for variety
@@ -65,7 +66,7 @@ class PrjScenario(Project):
             'Buildings', 'BuildingSystems' or 'IDEAS'
             the export with export_ailib works only on dymola!!!'''
         #TODO GENERALISE THE FOLDER WHERE TO EXPORT the modelica models create self variables
-        if model == 'AixLib':
+        if model == 'AixLib': # do not use this
             self.prj.used_library_calc = 'AixLib'
             self.prj.number_of_elements_calc = n_el
             if weather == None:
@@ -79,7 +80,7 @@ class PrjScenario(Project):
             else:
                 self.prj.weather_file_path = weather
             try: # to check parameters
-                self.prj.calc_all_buildings()
+                self.prj.calc_all_buildings(raise_errors=True)
             except:
                 raise ValueError('Parameters for modelica model are not ok!')
 
@@ -88,7 +89,7 @@ class PrjScenario(Project):
 
 
         elif model == 'IBPSA':
-            self.prj.used_library_calc = 'AixLib'
+            self.prj.used_library_calc = 'IBPSA'
             self.prj.number_of_elements_calc = n_el
             self.prj.merge_windows_calc = False
             if weather == None:
@@ -101,7 +102,7 @@ class PrjScenario(Project):
             else:
                 self.prj.weather_file_path = weather
             try: # to check parameters
-                self.prj.calc_all_buildings()
+                self.prj.calc_all_buildings(raise_errors=True)
             except:
                 raise ValueError('Parameters for modelica model are not ok!')
 
@@ -114,8 +115,31 @@ class PrjScenario(Project):
         else:
             raise ValueError('Unknown or Unsupported model: %s'%model)
 
-    def export_modelica_single(self, building_id, n_el=2, model='AixLib'):
-        pass
+    def export_modelica_single(self, building_id, n_el=2, model='IBPSA', library='AixLib'):
+        self.prj.used_library_calc = model
+        self.prj.number_of_elements_calc = n_el
+        self.prj.merge_windows_calc = False
+        if weather == None:
+            self.prj.weather_file_path = utilities.get_full_path(os.path.join(
+                "data",
+                "input",
+                "inputdata",
+                "weatherdata",
+                "DEU_BW_Mannheim_107290_TRY2010_12_Jahr_BBSR.mos"))
+        else:
+            self.prj.weather_file_path = weather
+        try:  # to check parameters
+            self.prj.calc_all_buildings(raise_errors=True)
+        except:
+            raise ValueError('Parameters for modelica model are not ok!')
+
+        path = os.path.join(self.config['folder_modelica_path'], 'ibpsa')
+        self.prj.export_ibpsa(
+            library=library,
+            internal_id=building_id,
+            path=path)
+
+
     def auto_retrofit_all(self, year,info=None):
         if info == None:
             self.prj.retrofit_all_buildings(
