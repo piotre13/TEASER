@@ -7,7 +7,7 @@ _author_: Daniele Schiera daniele.schiera@polito.it
 import os
 
 #from teaser.project import Project
-#from tests.omc_backend.test_project import Project
+from test_project import Project
 import teaser.logic.utilities as utilities
 import pandas as pd
 
