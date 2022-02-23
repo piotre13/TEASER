@@ -1,159 +1,141 @@
-<%namespace file="/modelica_language/" import="get_true_false, get_list, min_orientations"/> <%namespace file="/conversion/" import="deg_to_rad, azmiut_conv"/>
-within ${zone.parent.parent.name}.${zone.parent.name}.${zone.parent.name}_Models;
-model ${zone.parent.name}_${zone.name}
-  "This is the simulation model of ${zone.name} within building ${zone.parent.name} with traceable ID ${zone.parent.building_id}"
+ 
+within Residential_test.ResidentialApartmentBlock_2.ResidentialApartmentBlock_2_Models;
+model ResidentialApartmentBlock_2_SingleDwelling
+  "This is the simulation model of SingleDwelling within building ResidentialApartmentBlock_2 with traceable ID None"
 
-% if fmu_io == 'False':
-  ${library}.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
-    calTSky=${library}.BoundaryConditions.Types.SkyTemperatureCalculation.HorizontalRadiation,
-    computeWetBulbTemperature=false,
-    filNam=Modelica.Utilities.Files.loadResource(
-        "modelica://${zone.parent.parent.name}/${zone.parent.parent.weather_file_name}"))
-    "Weather data reader"
-    annotation (Placement(transformation(extent={{-98,52},{-78,72}})));
-% else:
-
-  extends ${library}.Fluid.FMI.ExportContainers.ThermalZone(
+  extends AixLib.Fluid.FMI.ExportContainers.ThermalZone(
     redeclare final package Medium = Modelica.Media.Air.DryAirNasa,
     nPorts =  2);
-  ${library}.Fluid.Sensors.MassFlowRate senMasFlon[nPorts](redeclare final package Medium = Modelica.Media.Air.DryAirNasa) "Mass flow rate sensor to connect thermal adapter with thermal zone."
+  AixLib.Fluid.Sensors.MassFlowRate senMasFlon[nPorts](redeclare final package Medium = Modelica.Media.Air.DryAirNasa) "Mass flow rate sensor to connect thermal adapter with thermal zone."
   annotation (Placement(transformation(extent={{-88,110},{-68,130}})));
-  ${library}.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
-    calTSky=${library}.BoundaryConditions.Types.SkyTemperatureCalculation.TemperaturesAndSkyCover,
+  AixLib.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
+    calTSky=AixLib.BoundaryConditions.Types.SkyTemperatureCalculation.TemperaturesAndSkyCover,
     computeWetBulbTemperature=false,
-    filNam=Modelica.Utilities.Files.loadResource("modelica://${zone.parent.parent.name}/${zone.parent.parent.weather_file_name}"),
-    TBlaSkySou = ${library}.BoundaryConditions.Types.DataSource.File,
-    HInfHorSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    HSou = ${library}.BoundaryConditions.Types.RadiationDataSource.Input_HDirNor_HDifHor,
-    TDewPoiSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    TDryBulSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    ceiHeiSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    opaSkyCovSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    pAtmSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    relHumSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    totSkyCovSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    winDirSou = ${library}.BoundaryConditions.Types.DataSource.Input,
-    winSpeSou = ${library}.BoundaryConditions.Types.DataSource.Input)
+    filNam=Modelica.Utilities.Files.loadResource("modelica://Residential_test/DEU_BW_Mannheim_107290_TRY2010_12_Jahr_BBSR.mos"),
+    TBlaSkySou = AixLib.BoundaryConditions.Types.DataSource.File,
+    HInfHorSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    HSou = AixLib.BoundaryConditions.Types.RadiationDataSource.Input_HDirNor_HDifHor,
+    TDewPoiSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    TDryBulSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    ceiHeiSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    opaSkyCovSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    pAtmSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    relHumSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    totSkyCovSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    winDirSou = AixLib.BoundaryConditions.Types.DataSource.Input,
+    winSpeSou = AixLib.BoundaryConditions.Types.DataSource.Input)
     "Weather data reader"
     annotation (Placement(transformation(extent={{-98,52},{-78,72}})));
-% endif
-  ${library}.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[${min_orientations(zone.model_attr.n_outer)}](    each outSkyCon=true,
+
+  Ideal_HeaterCooler_RC2.HeaterCoolerController heaterCoolerController() annotation(
+    Placement(visible = true, transformation(origin = {26, -68}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
+  Ideal_HeaterCooler_RC2.HeaterCoolerPI heaterCoolerPI(Cooler_on = true, Heater_on = true, h_coolerr = -1, h_heaterr = 165000, l_coolerr = -1650000, staOrDynn = true) annotation(
+    Placement(visible = true, transformation(origin = {86, -34}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ 
+  Modelica.Blocks.Interfaces.RealInput Tset_Heat_in(start = 273.15 + 20) annotation(
+    Placement(visible = true, transformation(origin = {108, -108}, extent = {{-20, -20}, {20, 20}}, rotation = 90), iconTransformation(origin = {-102, -86}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+ 
+  Modelica.Blocks.Interfaces.RealInput Tset_Cool_in(start = 273.25 + 25) annotation(
+    Placement(visible = true, transformation(origin = {68, -110}, extent = {{-20, -20}, {20, 20}}, rotation = 90), iconTransformation(origin = {-40, -68}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+ 
+  Modelica.Blocks.Interfaces.RealOutput P_Heat_ou annotation(
+    Placement(visible = true, transformation(origin = {178, -44}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {170, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+ 
+  Modelica.Blocks.Interfaces.RealOutput P_Cool_ou annotation(
+    Placement(visible = true, transformation(origin = {196, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-54, -78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
+  AixLib.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](    each outSkyCon=true,
     each outGroCon=true,
-    til=${get_list(deg_to_rad(zone.model_attr.tilt_facade))},
-    each lat = ${deg_to_rad(zone.parent.latitude)},
-    azi = ${get_list(azmiut_conv(zone.model_attr.orientation_facade))})
+    til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
+    each lat = 0.88645272708792,
+    azi = {3.141592653589793, 0.0, 1.5707963267948966, -1.5707963267948966, 0.0, 0.0})
     "Calculates diffuse solar radiation on titled surface for all directions"
     annotation (Placement(transformation(extent={{-68,20},{-48,40}})));
-  ${library}.BoundaryConditions.SolarIrradiation.DirectTiltedSurface HDirTil[${min_orientations(zone.model_attr.n_outer)}](    til=${get_list(deg_to_rad(zone.model_attr.tilt_facade))},
-    each lat =  ${deg_to_rad(zone.parent.latitude)},
-    azi=${get_list(azmiut_conv(zone.model_attr.orientation_facade))})
+  AixLib.BoundaryConditions.SolarIrradiation.DirectTiltedSurface HDirTil[6](    til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
+    each lat =  0.88645272708792,
+    azi={3.141592653589793, 0.0, 1.5707963267948966, -1.5707963267948966, 0.0, 0.0})
     "Calculates direct solar radiation on titled surface for all directions"
     annotation (Placement(transformation(extent={{-68,52},{-48,72}})));
-  ${library}.ThermalZones.ReducedOrder.SolarGain.CorrectionGDoublePane corGDoublePane(n=${min_orientations(zone.model_attr.n_outer)},  UWin=${zone.model_attr.u_value_win})
+  AixLib.ThermalZones.ReducedOrder.SolarGain.CorrectionGDoublePane corGDoublePane(n=6,  UWin=3.001169286735091)
     "Correction factor for solar transmission"
     annotation (Placement(transformation(extent={{6,54},{26,74}})));
-  ${library}.ThermalZones.ReducedOrder.RC.TwoElements
+  AixLib.ThermalZones.ReducedOrder.RC.TwoElements
   thermalZoneTwoElements(
     redeclare package Medium = Modelica.Media.Air.DryAirNasa,
-% if zone.parent.library_attr.consider_heat_capacity is True:
-    VAir=${zone.volume},
-% else:
-    VAir=0.0,
-% endif
-    hConExt=${zone.model_attr.alpha_conv_inner_ow},
-    hConWin=${zone.model_attr.alpha_conv_inner_win},
-    gWin=${zone.model_attr.weighted_g_value},
-    ratioWinConRad=${zone.model_attr.ratio_conv_rad_inner_win},
+    VAir=896.0,
+    hConExt=2.3635550772032947,
+    hConWin=2.7,
+    gWin=0.75,
+    ratioWinConRad=0.02,
     nExt=1,
-    RExt={${zone.model_attr.r1_ow}},
-    CExt={${zone.model_attr.c1_ow}},
-    hRad=${zone.model_attr.alpha_rad_inner_mean},
-    AInt=${zone.model_attr.area_iw},
-    hConInt=${zone.model_attr.alpha_conv_inner_iw},
+    RExt={0.00015084029268367494},
+    CExt={81900977.50896597},
+    hRad=5.0,
+    AInt=1194.6666666666667,
+    hConInt=2.3250000000000006,
     nInt=1,
-    RInt={${zone.model_attr.r1_iw}},
-    CInt={${zone.model_attr.c1_iw}},
-    RWin=${zone.model_attr.r1_win},
-    RExtRem=${zone.model_attr.r_rest_ow},
+    RInt={5.610715581761099e-05},
+    CInt={275756919.7710094},
+    RWin=0.0035556097362753453,
+    RExtRem=0.002919251468311393,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     extWallRC(thermCapExt(each der_T(fixed=true))),
     intWallRC(thermCapInt(each der_T(fixed=true))),
-    nOrientations=${min_orientations(zone.model_attr.n_outer)},
-    AWin=${get_list(zone.model_attr.window_areas)},
-    ATransparent=${get_list(zone.model_attr.transparent_areas)},
-% if fmu_io == 'True':
-    AExt=${get_list(zone.model_attr.facade_areas)}, nPorts = 2)
-% else:
-    AExt=${get_list(zone.model_attr.facade_areas)})
-% endif
+    nOrientations=6,
+    AWin={11.484200000000001, 11.484200000000001, 11.484200000000001, 11.484200000000001, 0.0, 0.0},
+    ATransparent={11.484200000000001, 11.484200000000001, 11.484200000000001, 11.484200000000001, 0.0, 0.0},
+    AExt={44.8826, 44.8826, 44.8826, 44.8826, 45.514, 45.514}, nPorts = 2)
     "Thermal zone"
     annotation (Placement(transformation(extent={{44,-2},{92,34}})));
-% if zone.model_attr.merge_windows is True:
-  ${library}.ThermalZones.ReducedOrder.EquivalentAirTemperature.VDI6007 eqAirTemp(
-    n=${min_orientations(zone.model_attr.n_outer)},
-    wfGro=${zone.model_attr.weightfactor_ground},
-    wfWall=${get_list(zone.model_attr.weightfactor_ow)},
-    wfWin=${get_list(zone.model_attr.weightfactor_win)},
+  AixLib.ThermalZones.ReducedOrder.EquivalentAirTemperature.VDI6007WithWindow eqAirTemp(
+    n=6,
+    wfGro=0.14851895293826808,
+    wfWall={0.1887095555662707, 0.1887095555662707, 0.1887095555662707, 0.1887095555662707, 0.0966428247966491, 0.0},
+    wfWin={0.25, 0.25, 0.25, 0.25, 0.0, 0.0},
     withLongwave=true,
-    aExt=${zone.model_attr.solar_absorp_ow},
-    hConWallOut=${zone.model_attr.alpha_conv_outer_ow},
-    hRad=${zone.model_attr.alpha_rad_outer_mean},
-    TGro=${zone.t_ground}) "Computes equivalent air temperature"
+    aExt=0.5,
+    hConWallOut=19.999999999999996,
+    hRad=4.999999999999999,
+    hConWinOut=20.0,
+    TGro=286.15) "Computes equivalent air temperature"
     annotation (Placement(transformation(extent={{-24,-14},{-4,6}})));
-% else:
-  ${library}.ThermalZones.ReducedOrder.EquivalentAirTemperature.VDI6007WithWindow eqAirTemp(
-    n=${min_orientations(zone.model_attr.n_outer)},
-    wfGro=${zone.model_attr.weightfactor_ground},
-    wfWall=${get_list(zone.model_attr.weightfactor_ow)},
-    wfWin=${get_list(zone.model_attr.weightfactor_win)},
-    withLongwave=true,
-    aExt=${zone.model_attr.solar_absorp_ow},
-    hConWallOut=${zone.model_attr.alpha_conv_outer_ow},
-    hRad=${zone.model_attr.alpha_rad_outer_mean},
-    hConWinOut=${zone.model_attr.alpha_conv_outer_win},
-    TGro=${zone.t_ground}) "Computes equivalent air temperature"
-    annotation (Placement(transformation(extent={{-24,-14},{-4,6}})));
-% endif
-  Modelica.Blocks.Math.Add solRad[${min_orientations(zone.model_attr.n_outer)}]
+  Modelica.Blocks.Math.Add solRad[6]
     "Sums up solar radiation of both directions"
     annotation (Placement(transformation(extent={{-38,6},{-28,16}})));
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature prescribedTemperature
     "Prescribed temperature for exterior walls outdoor surface temperature"
     annotation (Placement(transformation(extent={{8,-6},{20,6}})));
-% if zone.model_attr.merge_windows is False:
   Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature prescribedTemperature1
     "Prescribed temperature for windows outdoor surface temperature"
     annotation (Placement(transformation(extent={{8,14},{20,26}})));
   Modelica.Thermal.HeatTransfer.Components.Convection thermalConductorWin
     "Outdoor convective heat transfer of windows"
     annotation (Placement(transformation(extent={{38,16},{28,26}})));
-% endif
   Modelica.Thermal.HeatTransfer.Components.Convection thermalConductorWall
     "Outdoor convective heat transfer of walls"
     annotation (Placement(transformation(extent={{36,6},{26,-4}})));
-  Modelica.Blocks.Sources.Constant const[${min_orientations(zone.model_attr.n_outer)}](each k=0)
+  Modelica.Blocks.Sources.Constant const[6](each k=0)
     "Sets sunblind signal to zero (open)"
     annotation (Placement(transformation(extent={{-20,14},{-14,20}})));
-  ${library}.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
+  AixLib.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(
     transformation(extent={{-100,-10},{-66,22}}),iconTransformation(
     extent={{-70,-12},{-50,8}})));
-  Modelica.Blocks.Sources.Constant hConWall(k=${zone.model_attr.alpha_comb_outer_ow}*${zone.model_attr.area_ow})
+  Modelica.Blocks.Sources.Constant hConWall(k=25.0*270.5584)
     "Outdoor coefficient of heat transfer for walls"
     annotation (Placement(
     transformation(
     extent={{-4,-4},{4,4}},
     rotation=90,
     origin={30,-16})));
-% if zone.model_attr.merge_windows is False:
-  Modelica.Blocks.Sources.Constant hConvWin(k=${zone.model_attr.alpha_comb_outer_win}*${zone.model_attr.area_win})
+  Modelica.Blocks.Sources.Constant hConvWin(k=25.0*45.936800000000005)
     "Outdoor coefficient of heat transfer for windows"
     annotation (Placement(
     transformation(
     extent={{4,-4},{-4,4}},
     rotation=90,
     origin={32,38})));
-% endif
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow personsRad
     "Radiative heat flow of persons"
     annotation (Placement(transformation(extent={{48,-42},{68,-22}})));
@@ -163,17 +145,6 @@ model ${zone.parent.name}_${zone.name}
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow machinesConv
     "Convective heat flow of machines"
     annotation (Placement(transformation(extent={{48,-84},{68,-64}})));
-% if fmu_io == 'False':
-  Modelica.Blocks.Sources.CombiTimeTable internalGains(
-      tableOnFile=true,
-      extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic,
-      tableName="Internals",
-      fileName=Modelica.Utilities.Files.loadResource(
-          "modelica://${zone.parent.parent.name}/${zone.parent.name}/${zone.parent.name}_Models/${zone.parent.library_attr.file_internal_gains}"),
-      columns={2,3,4})
-      "Table with profiles for persons (radiative and convective) and machines (convective)"
-      annotation (Placement(transformation(extent={{6,-60},{22,-44}})));
-% else:
   Modelica.Blocks.Interfaces.RealInput personsRad_in(start=0) annotation(
     Placement(visible = true, transformation(origin = {-120, -30}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-108, -36}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput personsConv_in(start=0) annotation(
@@ -218,13 +189,13 @@ model ${zone.parent.name}_${zone.name}
     Placement(visible = true, transformation(origin = {52, -10}, extent = {{-4, -4}, {4, 4}}, rotation = 90), iconTransformation(origin = {48, -6}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
    Modelica.Blocks.Math.UnitConversions.To_degC to_degC annotation(
     Placement(visible = true, transformation(origin = {140, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-% endif
+    Modelica.Blocks.Math.UnitConversions.To_degC to_degC1 annotation(
+      Placement(visible = true, transformation(origin = {-6, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+
 equation
-% if zone.model_attr.merge_windows is False:
   connect(eqAirTemp.TEqAirWin, prescribedTemperature1.T)
     annotation (Line(
     points={{-3,-0.2},{0,-0.2},{0,20},{6.8,20}},   color={0,0,127}));
-% endif
   connect(eqAirTemp.TEqAir, prescribedTemperature.T)
     annotation (Line(points={{-3,-4},{4,-4},{4,0},{6.8,0}},
     color={0,0,127}));
@@ -244,16 +215,6 @@ equation
     string="%first",
     index=-1,
     extent={{-6,3},{-6,3}}));
-% if fmu_io == 'False':
-  connect(internalGains.y[1], personsRad.Q_flow)
-    annotation (Line(points={{22.8,
-    -52},{28,-52},{28,-32},{48,-32}}, color={0,0,127}));
-  connect(internalGains.y[2], personsConv.Q_flow)
-    annotation (Line(points={{22.8,-52},{36,-52},{48,-52}}, color={0,0,127}));
-  connect(internalGains.y[3], machinesConv.Q_flow)
-    annotation (Line(points={{22.8,
-    -52},{28,-52},{28,-74},{48,-74}}, color={0,0,127}));
-% else:
   connect(personsRad_in, personsRad.Q_flow) annotation(
     Line(points = {{-120, -30}, {48, -30}, {48, -32}}, color = {0, 0, 127}));
   connect(personsConv_in, personsConv.Q_flow) annotation(
@@ -304,7 +265,6 @@ equation
     Line(points = {{52, -2}, {52, -10}}, color = {191, 0, 0}));
   connect(thermalZoneTwoElements.intWallIndoorSurface, intWallIndoorSurface_in) annotation(
     Line(points = {{56, -2}, {56, -10}}, color = {191, 0, 0}));
-% endif
   connect(const.y, eqAirTemp.sunblind)
     annotation (Line(points={{-13.7,17},{-12,17},{-12,8},{-14,8},{-14,8}},
     color={0,0,127}));
@@ -328,29 +288,75 @@ equation
   connect(solRad.y, eqAirTemp.HSol)
     annotation (Line(points={{-27.5,11},{-26,11},{-26,2},{-26,2}},
     color={0,0,127}));
-  %for i in range(max(1,zone.model_attr.n_outer)):
-    connect(weaDat.weaBus, HDifTil[${i+1}].weaBus)
+    connect(weaDat.weaBus, HDifTil[1].weaBus)
     annotation (Line(
     points={{-78,62},{-74,62},{-74,30},{-68,30}},
     color={255,204,51},
     thickness=0.5));
-    connect(weaDat.weaBus, HDirTil[${i+1}].weaBus)
+    connect(weaDat.weaBus, HDirTil[1].weaBus)
     annotation (Line(
     points={{-78,62},{-73,62},{-68,62}},
     color={255,204,51},
     thickness=0.5));
-  %endfor
+    connect(weaDat.weaBus, HDifTil[2].weaBus)
+    annotation (Line(
+    points={{-78,62},{-74,62},{-74,30},{-68,30}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDirTil[2].weaBus)
+    annotation (Line(
+    points={{-78,62},{-73,62},{-68,62}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDifTil[3].weaBus)
+    annotation (Line(
+    points={{-78,62},{-74,62},{-74,30},{-68,30}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDirTil[3].weaBus)
+    annotation (Line(
+    points={{-78,62},{-73,62},{-68,62}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDifTil[4].weaBus)
+    annotation (Line(
+    points={{-78,62},{-74,62},{-74,30},{-68,30}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDirTil[4].weaBus)
+    annotation (Line(
+    points={{-78,62},{-73,62},{-68,62}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDifTil[5].weaBus)
+    annotation (Line(
+    points={{-78,62},{-74,62},{-74,30},{-68,30}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDirTil[5].weaBus)
+    annotation (Line(
+    points={{-78,62},{-73,62},{-68,62}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDifTil[6].weaBus)
+    annotation (Line(
+    points={{-78,62},{-74,62},{-74,30},{-68,30}},
+    color={255,204,51},
+    thickness=0.5));
+    connect(weaDat.weaBus, HDirTil[6].weaBus)
+    annotation (Line(
+    points={{-78,62},{-73,62},{-68,62}},
+    color={255,204,51},
+    thickness=0.5));
   connect(personsRad.port, thermalZoneTwoElements.intGainsRad)
     annotation (Line(
     points={{68,-32},{84,-32},{100,-32},{100,24},{92.2,24}},
     color={191,0,0}));
-% if zone.model_attr.merge_windows is False:
   connect(thermalConductorWin.solid, thermalZoneTwoElements.window)
     annotation (
      Line(points={{38,21},{40,21},{40,20},{43.8,20}}, color={191,0,0}));
   connect(prescribedTemperature1.port, thermalConductorWin.fluid)
     annotation (Line(points={{20,20},{28,20},{28,21}}, color={191,0,0}));
-% endif
   connect(thermalZoneTwoElements.extWall, thermalConductorWall.solid)
     annotation (Line(points={{43.8,12},{40,12},{40,1},{36,1}},
     color={191,0,0}));
@@ -358,10 +364,8 @@ equation
     annotation (Line(points={{26,1},{24,1},{24,0},{20,0}}, color={191,0,0}));
   connect(hConWall.y, thermalConductorWall.Gc)
     annotation (Line(points={{30,-11.6},{30,-4},{31,-4}}, color={0,0,127}));
-% if zone.model_attr.merge_windows is False:
   connect(hConvWin.y, thermalConductorWin.Gc)
     annotation (Line(points={{32,33.6},{32,26},{33,26}}, color={0,0,127}));
-% endif
   connect(weaBus.TBlaSky, eqAirTemp.TBlaSky)
     annotation (Line(
     points={{-83,6},{-58,6},{-58,2},{-32,2},{-32,-4},{-26,-4}},
@@ -380,11 +384,36 @@ equation
   connect(corGDoublePane.solarRadWinTrans, thermalZoneTwoElements.solRad)
     annotation (Line(points={{27,64},{34,64},{40,64},{40,31},{43,31}}, color={0,
     0,127}));
+  
+
+  
+  
+  connect(heaterCoolerController.heaterActive, heaterCoolerPI.heaterActive) annotation(
+    Line(points = {{34, -66}, {93, -66}, {93, -41}}, color = {255, 0, 255}));
+  connect(heaterCoolerController.coolerActive, heaterCoolerPI.coolerActive) annotation(
+    Line(points = {{34, -70}, {79, -70}, {79, -41}}, color = {255, 0, 255}));
+  connect(Tset_Cool_in, heaterCoolerPI.setPointCool) annotation(
+    Line(points = {{68, -110}, {68, -73.5}, {84, -73.5}, {84, -41}}, color = {0, 0, 127}));
+  connect(Tset_Heat_in, heaterCoolerPI.setPointHeat) annotation(
+    Line(points = {{108, -108}, {108, -84}, {88, -84}, {88, -41}}, color = {0, 0, 127}));
+  connect(heaterCoolerPI.heatingPower, P_Heat_ou) annotation(
+    Line(points = {{96, -30}, {117, -30}, {117, -44}, {178, -44}}, color = {0, 0, 127}));
+  connect(heaterCoolerPI.coolingPower, P_Cool_ou) annotation(
+    Line(points = {{96, -35}, {141, -35}, {141, -54}, {196, -54}}, color = {0, 0, 127}));
+  connect(heaterCoolerPI.heatCoolRoom, thermalZoneTwoElements.intGainsConv) annotation(
+    Line(points = {{95, -38}, {102, -38}, {102, 22}}, color = {191, 0, 0}));
+  connect(weaBus.TDryBul, to_degC1.u) annotation(
+    Line(points = {{-88, -10}, {-74, -10}, {-74, -66}}, color = {0, 0, 127}));
+  connect(to_degC1.y, heaterCoolerController.TDryBul) annotation(
+    Line(points = {{-50, -66}, {16, -66}, {16, -62}}, color = {0, 0, 127}));
+
   annotation (experiment(
-  StartTime=${str(zone.parent.parent.modelica_info.start_time)},
-  StopTime=${str(zone.parent.parent.modelica_info.stop_time)},
-  Interval=${zone.parent.parent.modelica_info.interval_output},
-  __Dymola_Algorithm="${zone.parent.parent.modelica_info.current_solver}"),
-  __Dymola_experimentSetupOutput(equidistant=${get_true_false(zone.parent.parent.modelica_info.equidistant_output)},
-  events=${get_true_false(zone.parent.parent.modelica_info.results_at_events)}));
-end ${zone.parent.name}_${zone.name};
+  StartTime=0,
+  StopTime=31536000,
+  Interval=3600,
+  __Dymola_Algorithm="Cvode"),
+  __Dymola_experimentSetupOutput(equidistant=true,
+  events=false));
+  
+
+end ResidentialApartmentBlock_2_SingleDwelling;

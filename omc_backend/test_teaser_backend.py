@@ -286,7 +286,8 @@ if __name__ == '__main__':
         'net_leased_area': [150]
     }
     db = pd.DataFrame.from_dict(dict_building)
-    prj = generate_archetype('Building', db)
-    om_models_dir = r"D:\Projects\PycharmProjects\casestudy\models\openmodelica"
+    prj= Project('Building_sbo')
+    prj = generate_archetype(prj, db)
+    om_models_dir = "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/ibpsa"
     export_ibpsa(prj,om_models_dir,fmu_io=True)
     #export_aixlib(prj, om_models_dir)

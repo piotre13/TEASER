@@ -23,7 +23,7 @@ def export_ibpsa(
         path=None,
         library='AixLib',
         fmu_io=False,
-        components_path = ''
+        template_path = None,
 ):
     """Exports models for IBPSA library
 
@@ -82,23 +82,29 @@ def export_ibpsa(
 
     lookup = TemplateLookup(directories=[utilities.get_full_path(
         os.path.join('data', 'output', 'modelicatemplate'))])
-    model_template_1 = Template(
-        filename=utilities.get_full_path(
-            "data/output/modelicatemplate/IBPSA/IBPSA_OneElement"),
-        lookup=lookup)
-    model_template_2 = Template(
-        #filename=r"D:\Projects\PycharmProjects\casestudy\uesa\tests\omc_backend\IBPSA_TwoElements", # MOD
-        #filename="/home/pietrorm/Documents/CODE/TEASER/omc_backend/IBPSA_TwoElements_wea_in",
-        filename="/home/pietrorm/Documents/CODE/TEASER/omc_backend/IBPSA_TwoElements_ideal",
-        lookup=lookup)
-    model_template_3 = Template(
-        filename=utilities.get_full_path(
-            "data/output/modelicatemplate/IBPSA/IBPSA_ThreeElements"),
-        lookup=lookup)
-    model_template_4 = Template(
-        filename=utilities.get_full_path(
-            "data/output/modelicatemplate/IBPSA/IBPSA_FourElements"),
-        lookup=lookup)
+
+    if not template_path:
+        model_template_1 = Template(
+            filename=utilities.get_full_path(
+                "data/output/modelicatemplate/IBPSA/IBPSA_OneElement"),
+            lookup=lookup)
+        model_template_2 = Template(
+            filename=utilities.get_full_path(
+                "data/output/modelicatemplate/IBPSA/IBPSA_TwoElement"),
+            lookup=lookup)
+        model_template_3 = Template(
+            filename=utilities.get_full_path(
+                "data/output/modelicatemplate/IBPSA/IBPSA_ThreeElements"),
+            lookup=lookup)
+        model_template_4 = Template(
+            filename=utilities.get_full_path(
+                "data/output/modelicatemplate/IBPSA/IBPSA_FourElements"),
+            lookup=lookup)
+    else:
+        model_template_1 = Template(filename=template_path,lookup=lookup)
+        model_template_2 = Template(filename=template_path,lookup=lookup)
+        model_template_3 = Template(filename=template_path,lookup=lookup)
+        model_template_4 = Template(filename=template_path,lookup=lookup)
 
     ibpsa_output._help_package(
         path=path,

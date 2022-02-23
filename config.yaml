@@ -4,4 +4,14 @@
 folder_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
 folder_modelica_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
 weather_path: ""
-modelica_info: ""
+#for model extraction
+template_ibpsa: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoElements_ideal"
+packages_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages"
+#for FMU conversion
+FMU_path: "/home/pietrorm/Documents/CODE/TEASER/FMUs"
+mo_lib: ["Modelica, {\"3.2.2\"}", "AixLib", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo"]
+FMU_version: "2.0"
+FMU_type : "cs"
+
+
+packages_names: ['Ideal_heaterCooler_RC2.mo']
