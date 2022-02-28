@@ -6,7 +6,7 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
 
     momodel = ModelicaSystem(mo_path, mo_name, mo_lib)
     sim_opt = momodel.getSimulationOptions()
-    sim_opt['solver']= 'cvode'
+    sim_opt['solver']= 'euler'
     sim_opt['stepSize'] = '1'
     momodel.setSimulationOptions(sim_opt)
     log = momodel.getconn.sendExpression("getErrorString()")
