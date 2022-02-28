@@ -5,6 +5,7 @@ from OMPython import ModelicaSystem
 import yaml
 import os
 import pickle
+from FMUs.create_fmu import Modelica2FMU
 
 '''this is old script using a class maybe i'll only use functions it's cleaner'''
 
@@ -16,9 +17,13 @@ class PrjScenario(Project):
         self.prj = Project()
         self.prj.name = self.name
         self.prj.weather_file_path = config['weather_path']
+        self.set_modelica_info()
 
         # CREATE project folder
         self.create_prj_folder() #creating the folder if first time
+
+    def set_modelica_info(self):
+        self.prj.modelica_info.current_solver = self.config['modelica_info']['current_solver']
 
 
     def create_buildings(self, res_dict = None, non_res_dict = None):
@@ -121,14 +126,14 @@ class PrjScenario(Project):
             for building in self.prj.buildings:
                 it = [self.name,building.name, building.name+'_Models',  building.name+'_'+building.thermal_zones[0].name] # TODO NEED TO EGNERALIZE THE NAME
                 mo_name = '.'.join(it)
-                mo_path = os.path.join(self.config['folder_modelica_path'], self.name)
+                mo_path = os.path.join(self.config['folder_modelica_path'], self.name,'package.mo')
                 FMU_name = building.name+'_FMU'
-                #instantiate the .mo model for each building present
-                momodel = ModelicaSystem(mo_path, mo_name, self.config['mo_lib'])
-                fmu = momodel.convertMo2Fmu(version=self.config['FMU_version'], fmuType=self.config['FMU_type'], fileNamePrefix=FMU_name)
+                fmu = Modelica2FMU(mo_name,mo_path,self.config['mo_lib'],FMU_name,self.config['FMU_version'],
+                             self.config['FMU_type'] )
         else:
-            momodel = ModelicaSystem(mo_path, mo_name, self.config['mo_lib'])
-            fmu = momodel.convertMo2Fmu(version=self.config['FMU_version'], fmuType=self.config['FMU_type'], fileNamePrefix=FMU_name)
+            Modelica2FMU(mo_name, mo_path, self.config['mo_lib'], FMU_name, self.config['FMU_version'],
+                         self.config['FMU_type'])
+
 
 
 
@@ -214,5 +219,5 @@ if __name__ == '__main__':
     PrJ = PrjScenario(config, prj_name)
     PrJ.create_buildings(residential_dict)
     PrJ.export_modelica()
-    PrJ.convert2FMU()
+    #PrJ.convert2FMU()
     #PrJ.save_project('pickle')

@@ -15,3 +15,6 @@ FMU_type : "cs"
 
 
 packages_names: ['Ideal_heaterCooler_RC2.mo']
+
+modelica_info:
+  current_solver: 'euler'

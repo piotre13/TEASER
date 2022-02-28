@@ -2,6 +2,9 @@ from fmpy import read_model_description, extract
 from fmpy.fmi2 import FMU2Slave
 from fmpy.util import plot_result
 import shutil
+from fmpy import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class SimulateFMU:
@@ -19,6 +22,10 @@ class SimulateFMU:
         #run the instantiation can pass name of the instantiation
         self.instantiate()
 
+        #testcollecting results
+        self.T_air_ou = []
+        self.T_ext = []
+
     def instantiate(self, instance_name='instance1'):
         model_description = read_model_description(self.fmu)
 
@@ -29,7 +36,7 @@ class SimulateFMU:
 
         # create list of input and outputs
         # todo should standardize the creation of FMU having in var names '_input' and '_output' suffix
-        self.inputs = []
+        #self.inputs = self.vrs['inputs']
         for out in model_description.outputs:
             name = out.variable.name
             self.outputs[name] = None
@@ -50,10 +57,18 @@ class SimulateFMU:
 
     def step(self, time, step_size, inputs):
         #setting inputs
+        self.fmu_inst.setReal([self.vrs['DryBulb']], [inputs])
 
         #actual simulation step
-        self.fmu_inst.doStep(currentCommunicationPoint=time, communicationStepSize=step_size)
-
+        try:
+            self.fmu_inst.doStep(currentCommunicationPoint=time, communicationStepSize=step_size)
+            outputs4 = self.fmu_inst.getReal([self.vrs['Tair_ou'],self.vrs['weaBus.TDryBul']])
+            self.T_air_ou.append(outputs4[0])
+            self.T_ext.append(outputs4[1])
+            print(outputs4)
+        except:
+            print('NOT WORKINGGGGG!')
+            shutil.rmtree(self.unzipdir, ignore_errors=True)
         #gathering outputs and saving results
 
     def terminate(self):
@@ -76,11 +91,13 @@ class SimulateFMU:
 
 if __name__ == '__main__':
 
-    fmu = 'FMUs/RC_building.fmu'
+    fmu = 'FMUs/RC_building_HeatCool.fmu'
+    dump(fmu)
+
     start_time = 0.0
     threshold = 2.0
-    stop_time = 2.0
-    step_size = 1e-3
+    stop_time = 8760
+    step_size = 60
 
     instance_params = {
         'startTime' : start_time,
@@ -90,18 +107,29 @@ if __name__ == '__main__':
 
     #instance of the fMU API class
     FMU_sim = SimulateFMU(fmu, **instance_params)
-
+    T_ext = list(np.linspace(283.15,300.15,8760))
     #TODO in between instantiation and simulation at every step of the simulation should be a function populating the inputs
 
+    input_keys = ['Atmos_Pressure', 'Ceiling_Hgt', 'DewPoint', 'DifHorzRad', 'DirNormRad', 'DryBulb', 'HorzIRSky', 'OpaqSkyCvr', 'RelHum', 'TotSkyCvr', ]
     #simulating
     time = start_time
+    i =0
     while time < stop_time:
-        inputs = []
+        inputs = T_ext[i]
         FMU_sim.step(time, step_size, inputs)
 
         #updating time
         time += step_size
+        i+=1
 #    result = simulate_fmu(fmu, start_time = 0, stop_time = 1)
+    plotting_value =  FMU_sim.T_air_ou
+    print(len(plotting_value))
+    print(plotting_value)
+    plt.plot(plotting_value)
+    plt.show()
+    plt.close()
+    plt.plot(FMU_sim.T_ext)
+    plt.show()
 
 #    from fmpy.util import plot_result
 #    plot_result(result)

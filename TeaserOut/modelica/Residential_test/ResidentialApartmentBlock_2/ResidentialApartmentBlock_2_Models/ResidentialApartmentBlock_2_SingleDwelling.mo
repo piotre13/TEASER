@@ -411,7 +411,7 @@ equation
   StartTime=0,
   StopTime=31536000,
   Interval=3600,
-  __Dymola_Algorithm="Cvode"),
+  __Dymola_Algorithm="euler"),
   __Dymola_experimentSetupOutput(equidistant=true,
   events=false));
   

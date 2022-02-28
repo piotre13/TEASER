@@ -15,7 +15,10 @@ def dict_to_list(dict):
 
 
 # %%
-dummy = ModelicaSystem("D:/Projects/Modelica Projects/Examples/Dummy.mo", "Dummy", ["Modelica"])
+mo_lib = ["Modelica, {\"3.2.3\"}", "AixLib", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo" ]
+mo_name = "Residential_test.ResidentialApartmentBlock_1.ResidentialApartmentBlock_1_Models.ResidentialApartmentBlock_1_SingleDwelling"
+mo_path = "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/Residential_test/package.mo"
+dummy = ModelicaSystem(mo_path, mo_name, mo_lib)
 
 # %%
 startTime = 0
