@@ -1,20 +1,51 @@
+
+
 ---
 #paths
 #TODO parametrise code by using this yaml file
-folder_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
-folder_modelica_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
-weather_path: ""
-#for model extraction
-template_ibpsa: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoElements_ideal"
-packages_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages"
-#for FMU conversion
-FMU_path: "/home/pietrorm/Documents/CODE/TEASER/FMUs"
-mo_lib: ["Modelica, {\"3.2.2\"}", "AixLib", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo"]
-FMU_version: "2.0"
-FMU_type : "cs"
+#folder_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
+#folder_modelica_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
+#weather_path: "" #.mos file
+##for model extraction
+#template_ibpsa: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoEl_RC"
+#template_multizone: "/home/pietrorm/Environments/TEASER/lib/python3.8/site-packages/teaser/data/output/modelicatemplate/AixLib/AixLib_Multizone"
+#packages_path: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages"
+##for FMU conversion
+#FMU_path: "/home/pietrorm/Documents/CODE/TEASER/FMUs"
+#mo_lib: ["Modelica, {\"3.2.2\"}", "AixLib", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo"]
+#FMU_version: "2.0"
+#FMU_type : "cs"
 
 
-packages_names: ['Ideal_heaterCooler_RC2.mo']
+#packages_names: ['Ideal_heaterCooler_RC2.mo']
+
+
+
+############################# NEW CONFIG ######################################
+# for PRJ_creation_archetypes.py
+paths:
+  modelica_out: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
+  teaser_project_out: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
+  weather_data : "/home/pietrorm/Documents/CODE/TEASER/data/..." #weather file for modelica or fmu .mos file
+  modelica_template: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoElements_ver3" #to update specifying the template for the .mo creation
+
+export_modelica:
+  weather: null # todo list here the possibilities
+  n_el: 2 # todo list here the possibilities
+  model: 'IBPSA' # todo list here the possibilities
+  library: 'AixLib'
+  fmu_io: True
+  single_bui: null #if want to export single building modelica model from teaser project insert the ID here
+
+retrofit_params:  #teaser functionality that is a bit out of scope
+  year_of_retrofit: 2012
+  type_of_retrofit: "adv_retrofit"
+  window_type: "Alu- oder Stahlfenster, Isolierverglasung"
+  material: "EPS_perimeter_insulation_top_layer"
 
 modelica_info:
-  current_solver: 'euler'
+  current_solver: "Cvode"
+
+# for shapefile_2_Dict
+
+#for FMU translator

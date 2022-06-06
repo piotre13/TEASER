@@ -14,7 +14,8 @@ import re
 import teaser.logic.utilities as utilities
 import teaser.data.input.teaserjson_input as tjson_in
 import teaser.data.output.teaserjson_output as tjson_out
-import teaser.data.output.aixlib_output as aixlib_output
+#import teaser.data.output.aixlib_output as aixlib_output
+import omc_backend.test_aixlib_output as aixlib_output
 import omc_backend.test_ibpsa_output as ibpsa_output
 #import teaser.data.output.ibpsa_output as ibpsa_output
 from teaser.data.dataclass import DataClass
@@ -1037,6 +1038,7 @@ internal_gains_mode: int [1, 2, 3]
         corG=None,
         internal_id=None,
         path=None,
+        fmu_io=False
     ):
         """Exports values to a record file for Modelica simulation
 
@@ -1078,13 +1080,13 @@ internal_gains_mode: int [1, 2, 3]
 
         if internal_id is None:
             aixlib_output.export_multizone(
-                buildings=self.buildings, prj=self, path=path,
+                buildings=self.buildings, prj=self, path=path, fmu_io = fmu_io
             )
         else:
             for bldg in self.buildings:
                 if bldg.internal_id == internal_id:
                     aixlib_output.export_multizone(
-                        buildings=[bldg], prj=self, path=path,
+                        buildings=[bldg], prj=self, path=path, fmu_io = fmu_io
                     )
         return path
 

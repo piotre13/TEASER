@@ -1,44 +1,44 @@
+__author__ = 'Pietro Rando Mazzarino'
+__date__ = '2022/06/03'
+__credits__ = ['Pietro Rando Mazzarino']
+__email__ = 'pietro.randomazzarino@polito.it'
+
 from Prj_creation_archetypes import PrjScenario as Prj
-from teaser.logic.buildingobjects.calculation.one_element import OneElement as One
-from teaser.logic.buildingobjects.thermalzone import ThermalZone
-import yaml
+from utils import read_config
 
 
-def read_config(path):
-    stream = open(path, 'r')
-    dictionary = yaml.load(stream,Loader=yaml.FullLoader)
-    return dictionary
 
+#this dict should be the outcome of the GIS processing
+#the lists contains the molteplicity of buildings
+dict_building = {
+        'id': [0,1],
+        'type': ['residential','residential'],
+        'method': ['tabula_dk','tabula_dk'],
+        'usage': ['apartment_block', 'apartment_block'],
+        'name': ["Bui01", "Bui02",],
+        'year_of_construction': [2010, 1999],
+        'number_of_floors': [1,2],
+        'height_of_floors': [2.75, 2.75],
+        'net_leased_area': [150, 150],
+        'with_ahu':[False,False],
+        'internal_gains_mode':[1,1],
+        'residential_layout':[None,None],
+        'neighbour_buildings':[None,None],
+        'attic':[None,None],
+        'cellar':[None,None],
+        'dormer':[None,None],
+        'construction_type':['tabula_standard','tabula_standard'],
+        'number_of_apartments':[None, None],
+    }
 
-if __name__ == '__main__':
-    config = read_config('config.yaml')
+#config file
+config = read_config('config.yaml')
+prj_name='newPRjclass_test'
+project = Prj(config,prj_name)
+print(project)
+project.create_buildings_from_input(dict_building)
+print(project)
+#NB this method if None or nothing is passed uses values from config except for the weather for which takes the one from teaser
+project.export_modelica(weather=None, n_el=None, model=None,library=None, single_bui = None, template=None, fmu_io=None)
+print(project)
 
-    #Creating a scenario and saving****************
-    Scenario = Prj(config,'PRJ_test2')
-    Scenario.create_residentials() # specify an info file with infos and number of buildings to be created or leave it as it is
-
-    Scenario.save_project(mode='pickle') #no mode will save in json teaser format
-    Scenario.export_modelica_all(model='IBPSA')
-    print(Scenario.prj)
-    #***********************************************
-
-    #Loading a scenario*****************************
-    #path_json = '/Users/pietrorandomazzarino/Documents/DOTTORATO/CODE/TEASER/TeaserOut/PRJ_test/PRJ_test.json'
-    #path_pickle = '/Users/pietrorandomazzarino/Documents/DOTTORATO/CODE/TEASER/TeaserOut/PRJ_test/PRJ_test.p'
-    #Scenario = Prj(config, 'PRJ_test')
-    #Scenario.load_project(path_json)
-    #Scenario.load_project(path_pickle)
-    #print(Scenario.prj)
-    #***********************************************
-
-    #exporting modelica models *********************
-    #Scenario = Prj(config,'PRJ_test')
-    #Scenario.export_modelica_all(weather=None, n_el=2, model='AixLib')
-    # is possible to specify IBPSA or AixLib the number of element calc and the weather file
-    #***********************************************
-
-    #path_json = '/Users/pietrorandomazzarino/Documents/DOTTORATO/CODE/TEASER/TeaserOut/TEA_scenarios/PRJ_test/PRJ_test.json'
-    #Scenario = Prj(config, 'PRJ_test2')
-    #Scenario.load_project(path_json)
-    #prj = Scenario.prj
-    #Scenario.export_modelica_all(model='IBPSA',library= 'Buildings')

@@ -3,6 +3,7 @@ within Residential_test.ResidentialApartmentBlock_2.ResidentialApartmentBlock_2_
 model ResidentialApartmentBlock_2_SingleDwelling
   "This is the simulation model of SingleDwelling within building ResidentialApartmentBlock_2 with traceable ID None"
 
+
   extends AixLib.Fluid.FMI.ExportContainers.ThermalZone(
     redeclare final package Medium = Modelica.Media.Air.DryAirNasa,
     nPorts =  2);
@@ -26,25 +27,6 @@ model ResidentialApartmentBlock_2_SingleDwelling
     winSpeSou = AixLib.BoundaryConditions.Types.DataSource.Input)
     "Weather data reader"
     annotation (Placement(transformation(extent={{-98,52},{-78,72}})));
-
-  Ideal_HeaterCooler_RC2.HeaterCoolerController heaterCoolerController() annotation(
-    Placement(visible = true, transformation(origin = {26, -68}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-
-  Ideal_HeaterCooler_RC2.HeaterCoolerPI heaterCoolerPI(Cooler_on = true, Heater_on = true, h_coolerr = -1, h_heaterr = 165000, l_coolerr = -1650000, staOrDynn = true) annotation(
-    Placement(visible = true, transformation(origin = {86, -34}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
- 
-  Modelica.Blocks.Interfaces.RealInput Tset_Heat_in(start = 273.15 + 20) annotation(
-    Placement(visible = true, transformation(origin = {108, -108}, extent = {{-20, -20}, {20, 20}}, rotation = 90), iconTransformation(origin = {-102, -86}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
- 
-  Modelica.Blocks.Interfaces.RealInput Tset_Cool_in(start = 273.25 + 25) annotation(
-    Placement(visible = true, transformation(origin = {68, -110}, extent = {{-20, -20}, {20, 20}}, rotation = 90), iconTransformation(origin = {-40, -68}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
- 
-  Modelica.Blocks.Interfaces.RealOutput P_Heat_ou annotation(
-    Placement(visible = true, transformation(origin = {178, -44}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {170, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
- 
-  Modelica.Blocks.Interfaces.RealOutput P_Cool_ou annotation(
-    Placement(visible = true, transformation(origin = {196, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-54, -78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-
   AixLib.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](    each outSkyCon=true,
     each outGroCon=true,
     til={1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 1.5707963267948966, 0.0, 0.0},
@@ -153,6 +135,8 @@ model ResidentialApartmentBlock_2_SingleDwelling
     Placement(visible = true, transformation(origin = {-120, -76}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-108, -36}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealInput heatCoolRoom_in(start=0) annotation(
     Placement(visible = true, transformation(origin = {34, -120}, extent = {{-20, -20}, {20, 20}}, rotation = 90), iconTransformation(origin = {-108, -36}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
+  Modelica.Blocks.Interfaces.RealOutput heatCoolRoom_ou annotation(
+    Placement(visible = true, transformation(origin = {138, -124}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-34, -124}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow heatCoolRoom annotation(
     Placement(visible = true, transformation(extent = {{50, -102}, {70, -82}}, rotation = 0)));
   Modelica.Blocks.Interfaces.RealOutput Tair_ou annotation(
@@ -189,9 +173,6 @@ model ResidentialApartmentBlock_2_SingleDwelling
     Placement(visible = true, transformation(origin = {52, -10}, extent = {{-4, -4}, {4, 4}}, rotation = 90), iconTransformation(origin = {48, -6}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
    Modelica.Blocks.Math.UnitConversions.To_degC to_degC annotation(
     Placement(visible = true, transformation(origin = {140, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.UnitConversions.To_degC to_degC1 annotation(
-      Placement(visible = true, transformation(origin = {-6, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-
 equation
   connect(eqAirTemp.TEqAirWin, prescribedTemperature1.T)
     annotation (Line(
@@ -225,6 +206,8 @@ equation
     Line(points = {{70, -92}, {92, -92}, {92, 20}}, color = {191, 0, 0}));
   connect(heatCoolRoom_in, heatCoolRoom.Q_flow) annotation(
     Line(points = {{34, -120}, {34, -92}, {50, -92}}, color = {0, 0, 127}));
+     connect(heatCoolRoom_ou, heatCoolRoom.Q_flow) annotation(
+    Line(points = {{138, -124}, {68, -124}, {68, -106}}, color = {0, 0, 127}));
   connect(thermalZoneTwoElements.TAir, to_degC.u) annotation(
     Line(points = {{94, 32}, {128, 32}}, color = {0, 0, 127}));
   connect(to_degC.y, Tair_ou) annotation(
@@ -384,29 +367,6 @@ equation
   connect(corGDoublePane.solarRadWinTrans, thermalZoneTwoElements.solRad)
     annotation (Line(points={{27,64},{34,64},{40,64},{40,31},{43,31}}, color={0,
     0,127}));
-  
-
-  
-  
-  connect(heaterCoolerController.heaterActive, heaterCoolerPI.heaterActive) annotation(
-    Line(points = {{34, -66}, {93, -66}, {93, -41}}, color = {255, 0, 255}));
-  connect(heaterCoolerController.coolerActive, heaterCoolerPI.coolerActive) annotation(
-    Line(points = {{34, -70}, {79, -70}, {79, -41}}, color = {255, 0, 255}));
-  connect(Tset_Cool_in, heaterCoolerPI.setPointCool) annotation(
-    Line(points = {{68, -110}, {68, -73.5}, {84, -73.5}, {84, -41}}, color = {0, 0, 127}));
-  connect(Tset_Heat_in, heaterCoolerPI.setPointHeat) annotation(
-    Line(points = {{108, -108}, {108, -84}, {88, -84}, {88, -41}}, color = {0, 0, 127}));
-  connect(heaterCoolerPI.heatingPower, P_Heat_ou) annotation(
-    Line(points = {{96, -30}, {117, -30}, {117, -44}, {178, -44}}, color = {0, 0, 127}));
-  connect(heaterCoolerPI.coolingPower, P_Cool_ou) annotation(
-    Line(points = {{96, -35}, {141, -35}, {141, -54}, {196, -54}}, color = {0, 0, 127}));
-  connect(heaterCoolerPI.heatCoolRoom, thermalZoneTwoElements.intGainsConv) annotation(
-    Line(points = {{95, -38}, {102, -38}, {102, 22}}, color = {191, 0, 0}));
-  connect(weaBus.TDryBul, to_degC1.u) annotation(
-    Line(points = {{-88, -10}, {-74, -10}, {-74, -66}}, color = {0, 0, 127}));
-  connect(to_degC1.y, heaterCoolerController.TDryBul) annotation(
-    Line(points = {{-50, -66}, {16, -66}, {16, -62}}, color = {0, 0, 127}));
-
   annotation (experiment(
   StartTime=0,
   StopTime=31536000,
@@ -414,6 +374,4 @@ equation
   __Dymola_Algorithm="euler"),
   __Dymola_experimentSetupOutput(equidistant=true,
   events=false));
-  
-
 end ResidentialApartmentBlock_2_SingleDwelling;
