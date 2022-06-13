@@ -95,3 +95,20 @@
         number_of_apartments : int
             number of apartments inside Building (default = 1). CAUTION only
             used for urbanrenet
+
+# Output folder structure (Modelica project model)
+      project folder # name of the project
+      +-- Building1 folder #name of the building
+          +-- Building1 models folder # name of the building + '_Models'
+               +-- Building1 modelica model # .mo file name of the building + '_TypeArchetype' e.g. Bui1_SingleDwelling
+               +-- internal gains file #.txt
+               +-- packages files as in the others
+          +-- package order # package.order file with the order of modelica packages
+          +-- package # actuale .mo file for the building (seems not loadble)
+            
+      +-- Building2 folder #name of the building
+          +-- ...
+      +-- ...
+      +-- weather file #.mos file
+      +-- package order # package.order file with the order of modelica packages
+      +-- package # actuale .mo file for the entire project (load this on OM)

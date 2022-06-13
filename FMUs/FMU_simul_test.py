@@ -1,3 +1,7 @@
+__author__ = 'Pietro Rando Mazzarino'
+__date__ = '2022/06/03'
+__credits__ = ['Pietro Rando Mazzarino']
+__email__ = 'pietro.randomazzarino@polito.it'
 
 from fmpy import read_model_description, extract, dump
 from fmpy.fmi2 import FMU2Slave

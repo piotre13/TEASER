@@ -1,16 +1,30 @@
-__author__ = 'Pietro Rando Mazzarino'
-__date__ = '2022/06/03'
-__credits__ = ['Pietro Rando Mazzarino']
-__email__ = 'pietro.randomazzarino@polito.it'
+In this file are reported the typologies of building extracted in modelica from teaser.
+firstly the folder name is reported and secondly the characteristics dict.
 
-from Prj_creation_archetypes import PrjScenario as Prj
-from utils import read_config
+# SingleDwellings
+            dict_building = {
+        'id': [0,1],
+        'type': ['residential','residential'],
+        'method': ['iwu','iwu'],
+        'usage': ['single_family_dwelling', 'single_family_dwelling'],
+        'name': ["Bui01", "Bui02",],
+        'year_of_construction': [2010, 1999],
+        'number_of_floors': [1,2],
+        'height_of_floors': [2.75, 2.75],
+        'net_leased_area': [150, 150*2],
+        'with_ahu':[False,False],
+        'internal_gains_mode':[1,1],
+        'residential_layout':[None,None],
+        'neighbour_buildings':[None,None],
+        'attic':[None,None],
+        'cellar':[None,None],
+        'dormer':[None,None],
+        'construction_type':[None,None],
+        'number_of_apartments':[None, None],
+    }
 
-
-
-#this dict should be the outcome of the GIS processing
-#the lists contains the molteplicity of buildings
-dict_building = {
+# ApartmentBlock_DE
+        dict_building = {
         'id': [0,1,2,3,4,5,6,7],
         'type': ['residential','residential','residential','residential','residential','residential','residential','residential'],
         'method': ['tabula_de','tabula_de','tabula_de','tabula_de','tabula_de','tabula_de','tabula_de','tabula_de'],
@@ -30,15 +44,4 @@ dict_building = {
         'construction_type':[None,None,None,None,None,None,None,None],
         'number_of_apartments':[None, None, None, None, None, None, None, None],
     }
-
-#config file
-config = read_config('config.yaml')
-prj_name='ApartmentBlock_DE'
-project = Prj(config,prj_name)
-print(project)
-project.create_buildings_from_input(dict_building)
-print(project)
-#NB this method if None or nothing is passed uses values from config except for the weather for which takes the one from teaser
-project.export_modelica(weather=None, n_el=None, model=None,library=None, single_bui = None, template=None, fmu_io=None)
-print(project)
-
+NB ---> with these settings the building year of construction accepted are only until 1976???
