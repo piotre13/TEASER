@@ -1,3 +1,9 @@
+# PIPELINE WORKFLOW
+1. TEASER ---> main.py using Project_creation_archetypes.py (it create a teaser and a modelica project for the given buildings)
+2. FMU creation ---> FMUs/create_fmu.py (convert a single building .mo file into FMU)
+3. SIMULATE FMU ---> FMUs/FMU_simul_test.py (simulate an FMU)
+
+
 # TEASER - FMU pipeline
 ## annotations pre simulation:
 1. nel nuovo template bisognerebbe ricopiare una a una le annotazioni dei componenti dal pacchetto così che quando si carica su OMEdit non vcenga brutto e tutto sbalòlato
@@ -112,3 +118,16 @@
       +-- weather file #.mos file
       +-- package order # package.order file with the order of modelica packages
       +-- package # actuale .mo file for the entire project (load this on OM)
+
+
+# TEASER
+## problems:
+
+
+# CREATE fmu
+## problems:
+1. export the solver (using flag for cvode) Are we really using the specific solver (NB only euler and Cvode )
+# SIMULATE FMU
+## problems:
+1. modifica dei parametri
+2. funzionamento cooling

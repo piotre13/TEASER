@@ -164,7 +164,7 @@ model ${zone.parent.name}_${zone.name}
     "Convective heat flow of machines"
     annotation (Placement(transformation(extent={{48,-84},{68,-64}})));
 % if fmu_io == 'True':
-  parameter Boolean recOrSep=false "Use record or seperate parameters";
+  parameter Boolean recOrSep=true "Use record or seperate parameters";
   parameter Boolean Heater_on=true "Activates the heater";
   parameter Real h_heater=167500 "Upper limit controller output of the heater";
   parameter Real l_heater=0 "Lower limit controller output of the heater";
@@ -177,9 +177,9 @@ model ${zone.parent.name}_${zone.name}
   parameter Real KR_cooler=100 "Gain of the cooling controller";
   parameter Modelica.SIunits.Time TN_cooler=1 "Time constant of the cooling controller";
   parameter Boolean withIdealThresholds=false "Use of Ideal Thresholds";
-  parameter Real TThresholdHeater=273.15 + 15-15;
+  parameter Real TThresholdHeater=273.15;
   Modelica.Blocks.Sources.Constant TAirThresholdHeating(k=TThresholdHeater);
-  parameter Real TThresholdCooler=273.15 + 22+15;
+  parameter Real TThresholdCooler=273.15 + 25;
   Modelica.Blocks.Sources.Constant TAirThresholdCooling(k=TThresholdCooler);
 
   parameter Real T_start(quantity="ThermodynamicTemperature",
@@ -258,21 +258,21 @@ model ${zone.parent.name}_${zone.name}
     maxOverheatingACH={3.0,2.0},
     maxSummerACH={1.0,273.15 + 10,273.15 + 17},
     winterReduction={0.2,273.15,273.15 + 10},
-    withAHU=true,
+    withAHU=false,
     minAHU=0,
     maxAHU=12,
     hHeat=1000,
     lHeat=0,
-    KRHeat=1000,
+    KRHeat=100,
     TNHeat=1,
-    HeaterOn=false,
+    HeaterOn=true,
     hCool=0,
     lCool=-1,
-    KRCool=1000,
+    KRCool=100,
     TNCool=1,
     CoolerOn=false,
-    TThresholdHeater=273.15 + 15+10,
-    TThresholdCooler=273.15 + 22-10,
+    TThresholdHeater=273.15 ,
+    TThresholdCooler=273.15 + 25 ,
     withIdealThresholds=false);
     end HC_param;
 

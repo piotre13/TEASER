@@ -7,6 +7,8 @@ from Prj_creation_archetypes import PrjScenario as Prj
 from utils import read_config
 
 
+#********** GIS PROCESSING **************
+
 
 #this dict should be the outcome of the GIS processing
 #the lists contains the molteplicity of buildings

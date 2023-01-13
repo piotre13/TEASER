@@ -7,6 +7,9 @@ __email__ = 'pietro.randomazzarino@polito.it'
 from OMPython import ModelicaSystem
 import os
 import json
+from OMPython import OMCSessionZMQ
+
+omc = OMCSessionZMQ()
 from sys import argv
 
 #TODO authomated extraction of FMU's for each different bulding in teaser modelica project
@@ -17,7 +20,6 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
     #momodel = ModelicaSystem(mo_path, mo_name, mo_lib, '--fmiFlags=s:cvode')
     # instantiating the model and building it
     momodel = ModelicaSystem(mo_path, mo_name, mo_lib, commandLineOptions=commandLineOptions)
-    files = os.listdir()
     momodel.buildModel()
 
     # setting the options/params and inputs if present
@@ -36,6 +38,7 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
             elif key == 'set_inputs':
                 momodel.setInputs(kwargs[key])
 
+    #momodel.buildModel()
     # creating FMU description
     description = {'quantities': momodel.getQuantities(),
                    'continous': momodel.getContinuous(),
@@ -49,12 +52,14 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
                    #'solutions': momodel.getSolutions()#could not work without simulate}
                     }
 
+    #momodel.buildModel()
     # create & extract the FMU
+
     fmu = momodel.convertMo2Fmu(version=FMU_version, fmuType= FMU_type, fileNamePrefix= FMU_name, includeResources=True)
 
     #clear the folder:
     files = [f for f in os.listdir(FMU_folder) if os.path.isfile(f)]
-    acc_ext = ['.py','.fmu','.md']
+    acc_ext = ['.py','.fmu','.md','FMU.log']
     for file in files:
         if not any([file.endswith(i) for i in acc_ext]):
             file = os.path.join(FMU_folder,file)
@@ -64,26 +69,30 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
     path = 'description_json/'+FMU_name+'.json'
     with open(path, 'w') as fp:
         json.dump(description, fp, sort_keys=True, indent=4)
+    fp.close()
 
+    log = momodel.getconn.sendExpression("getErrorString()")
+    print(log)
     return fmu, description
-
 
 
 
 if __name__ == '__main__':
     #mo_lib = ["Modelica, {\"3.2.3\"}", "AixLib, {\"0.9.1\"}", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo" ]
     mo_lib = ["Modelica, {\"3.2.3\"}", "AixLib",] #"/home/pietrorm/Documents/CODE/TEASER/FMUs/Building2/package.mo" ]
+    mo_fullpath = "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/package.mo"
 
-    # mo_name if the project has more models must contains the path with dots
-    #mo_name = "Residential_test.ResidentialApartmentBlock_1.ResidentialApartmentBlock_1_Models.ResidentialApartmentBlock_1_SingleDwelling"
-    #mo_name = "Building.ResidentialBuilding.ResidentialBuilding_Models.ResidentialBuilding_SingleDwelling"
-    mo_name = "ApartmentBlock_DE.Bui04.Bui04_Models.Bui04_SingleDwelling"
 
-    #mo_name = "RC_IdealHeatCool"
 
-    #mo_fullpath = "/home/pietrorm/Documents/CODE/TEASER/FMUs/Building/package.mo"
-    mo_fullpath="/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/ApartmentBlock_DE/package.mo"
+#    directories = os.listdir('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/ApartmentBlock_DE/')
+    directories = [name for name in os.listdir('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/') if os.path.isdir(os.path.join('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/', name)) ]
 
-    kwargs = {'set_params':[],'set_continous':[],'set_simOptions':[], 'set_linearOptions':[], 'set_optOptions':[], 'set_inputs':[],}
-
-    Modelica2FMU(mo_name, mo_fullpath, mo_lib, 'Bui04_DE', "2.0")
+    for dir_n in directories:
+        mo_name = "test_MES_CeaSingapore."+dir_n+"."+ dir_n + "_Models."+dir_n+"_SingleDwelling"
+        name = mo_name.split('.')[1] + '_linux'
+        #kwargs = {'set_params':['KR_cooler=100','KR_heater=100','TN_cooler=1', 'TN_heater=1','h_cooler=0', 'h_heater=1675000', 'l_cooler=-1675000', 'l_heater=0', 'recOrSep=true'],
+        #         'set_continous':[],'set_simOptions':["solver=euler", "stepSize=60"], 'set_linearOptions':[], 'set_optOptions':[], 'set_inputs':[],}
+        kwargs = {}
+        #cmd_opt = '--fmiFlags=s:cvode'
+        cmd_opt=None
+        Modelica2FMU(mo_name, mo_fullpath, mo_lib, name, "2.0",commandLineOptions=cmd_opt,**kwargs)

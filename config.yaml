@@ -27,8 +27,10 @@ paths:
   modelica_out: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica"
   teaser_project_out: "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/TEA_scenarios"
   weather_data : "/home/pietrorm/Documents/CODE/TEASER/data/..." #weather file for modelica or fmu .mos file
-  modelica_template: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoElements_ver3" #to update specifying the template for the .mo creation
+  modelica_template: "/home/pietrorm/Documents/CODE/TEASER/templates/IBPSA_TwoElements_ver3_original" #to update specifying the template for the .mo creation
   FMU_folder : "/home/pietrorm/Documents/CODE/TEASER/FMUs"
+  FMU_descr_folder: "/home/pietrorm/Documents/CODE/TEASER/FMUs/description_json"
+
 export_modelica:
   weather: null # todo list here the possibilities
   n_el: 2 # todo list here the possibilities
