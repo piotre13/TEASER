@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="ipazia126.polito.it" id="7945ef61-7cbd-4e12-b7c4-603d6c473264" port="22" nameFormat="DESCRIPTIVE" username="rando" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

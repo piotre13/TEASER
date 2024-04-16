@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="dd00a946-1dce-4f55-914a-41bb7892412d" name="rando_ipazia" url="http://rando@ipazia126.polito.it">
+        <fileTransfer rootFolder="/media/space/rando" accessType="SFTP" host="ipazia126.polito.it" port="22" sshConfigId="7945ef61-7cbd-4e12-b7c4-603d6c473264" sshConfig="rando@ipazia126.polito.it:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -46,7 +46,7 @@ class Cea2Teaser():
                     self.get_residential_layout()
                 elif field == 'neighbour_buildings':
                     self.get_neighbour_buildings()
-                elif field =='attic':
+                elif field =='attiteaserc':
                     self.get_attic()
                 elif field == 'cellar':
                     self.get_cellar()
@@ -129,6 +129,11 @@ if __name__ == '__main__':
     sorroundings_path = '/home/pietrorm/Documents/CODE/TEASER/data/baseline/inputs/building-geometry/surroundings.shp'
     C = Cea2Teaser(zone_path)
     teaser_dict = C.run_conversion()
+    #save pickle of teaser dict from singapore to assign families and schedules outside
+    import pickle
+
+    with open('Singapore_TeaserDict.pkl', 'wb') as f:
+        pickle.dump(teaser_dict, f)
     pprint.pprint (teaser_dict)
     config = read_config('config.yaml')
     prj_name = 'test_MES_CeaSingapore'

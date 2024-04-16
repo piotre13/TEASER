@@ -80,15 +80,15 @@ def Modelica2FMU (mo_name, mo_path, mo_lib, FMU_name,FMU_version="2.0", FMU_type
 if __name__ == '__main__':
     #mo_lib = ["Modelica, {\"3.2.3\"}", "AixLib, {\"0.9.1\"}", "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/packages/Ideal_HeaterCooler_RC2.mo" ]
     mo_lib = ["Modelica, {\"3.2.3\"}", "AixLib",] #"/home/pietrorm/Documents/CODE/TEASER/FMUs/Building2/package.mo" ]
-    mo_fullpath = "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/package.mo"
+    mo_fullpath = "/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/TEASER_test/package.mo"
 
 
 
 #    directories = os.listdir('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/ApartmentBlock_DE/')
-    directories = [name for name in os.listdir('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/') if os.path.isdir(os.path.join('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/test_MES_CeaSingapore/', name)) ]
+    directories = [name for name in os.listdir('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/TEASER_test/') if os.path.isdir(os.path.join('/home/pietrorm/Documents/CODE/TEASER/TeaserOut/modelica/TEASER_test/', name)) ]
 
     for dir_n in directories:
-        mo_name = "test_MES_CeaSingapore."+dir_n+"."+ dir_n + "_Models."+dir_n+"_SingleDwelling"
+        mo_name = "TEASER_test."+dir_n+"."+ dir_n + "_Models."+dir_n+"_SingleDwelling"
         name = mo_name.split('.')[1] + '_linux'
         #kwargs = {'set_params':['KR_cooler=100','KR_heater=100','TN_cooler=1', 'TN_heater=1','h_cooler=0', 'h_heater=1675000', 'l_cooler=-1675000', 'l_heater=0', 'recOrSep=true'],
         #         'set_continous':[],'set_simOptions':["solver=euler", "stepSize=60"], 'set_linearOptions':[], 'set_optOptions':[], 'set_inputs':[],}

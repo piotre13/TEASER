@@ -6,8 +6,9 @@ __email__ = 'pietro.randomazzarino@polito.it'
 
 
 #from teaser.project import Project
-from teaser_modified.project import Project
-import teaser.logic.utilities as utilities
+#from teaser_modified_OLD.project import Project
+from teaser_fork_final.project import  Project
+import teaser_fork_final.logic.utilities as utilities
 import yaml
 import os
 import pickle

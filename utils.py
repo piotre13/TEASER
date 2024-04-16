@@ -9,4 +9,5 @@ import yaml
 def read_config(path):
     stream = open(path, 'r')
     dictionary = yaml.load(stream,Loader=yaml.FullLoader)
+    stream.close()
     return dictionary
