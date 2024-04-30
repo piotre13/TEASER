@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "TEASER_casestudy_Stura_mask",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 0 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 7.693093520608437, 45.099020241062441 ], [ 7.697124614344277, 45.097355660067045 ], [ 7.690747063060709, 45.087809388334406 ], [ 7.688420660705696, 45.089173141439069 ], [ 7.693153686186584, 45.098899909906145 ], [ 7.693093520608437, 45.099020241062441 ] ] ] ] } }
+]
+}
